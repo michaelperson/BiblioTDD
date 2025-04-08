@@ -1,6 +1,5 @@
 image: mcr.microsoft.com/dotnet/sdk:8.0
-before_script:
-  - $PSVersionTable.PSVersion
+before_script: 
   - dotnet --version
   - nuget help | select-string Version
 stages:
