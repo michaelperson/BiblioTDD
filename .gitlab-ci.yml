@@ -30,7 +30,7 @@ pack and deploy job:
   script:
     - dotnet pack -c Release -o .
     - dotnet new nugetconfig
-    - dotnet nuget add source --name feedName --source https://pkgs.dev.azure.com/cicdsamples/TddSample1/_packaging/TddSource/nuget/v3/index.json --username cicdsamples --password $nugetFeedToken --configfile nuget.config --StorePasswordInClearText
+    - dotnet nuget add source "https://pkgs.dev.azure.com/cicdsamples/TddSample1/_packaging/TddSource/nuget/v3/index.json" --name feedName --username cicdsamples --password $nugetFeedToken --configfile nuget.config --StorePasswordInClearText
     - dotnet nuget push -source feedName -skipduplicate -apikey az *.nupkg
   only:
     - main 
