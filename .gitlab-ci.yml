@@ -29,6 +29,8 @@ pack and deploy job:
   tags:
     - windows
   stage: deploy
+  only: 
+    - merge_requests 
 
 pages:
   script:
