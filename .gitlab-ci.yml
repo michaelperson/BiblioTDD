@@ -1,13 +1,14 @@
 image: mcr.microsoft.com/dotnet/sdk:8.0
-before_script: 
-  - dotnet --version
-  - nuget help | select-string Version
+
 stages:
   - build
   - test
   - deploy
 build job:
   script:
+    - dotnet restore ./BiblioTDD.Models/BiblioTDD.Models.csproj
+    - dotnet restore ./BiblioTDD.app/BiblioTDD.app.csproj
+    - dotnet restore ./BiblioTDD.Tests/BiblioTDD.Tests.csproj
     - dotnet build -c Release 
   stage: build
   only: 
