@@ -1,4 +1,4 @@
-image: mcr.microsoft.com/dotnet/core/sdk:3.1
+image: mcr.microsoft.com/dotnet/sdk:8.0
 before_script:
   - $PSVersionTable.PSVersion
   - dotnet --version
@@ -11,7 +11,7 @@ build job:
   script:
     - dotnet build -c Release
   tags:
-    - windows
+    - linux
   stage: build
   only: 
     - merge_requests 
@@ -25,7 +25,7 @@ test and cover job:
     - dotnet test -c Release /p:CollectCoverage=true
   coverage: /|s*Totals*|s*(d+[,.]d+%)/
   tags:
-    - windows
+    - linux
   stage: test
   only:
     - merge_requests
@@ -39,12 +39,12 @@ pack and deploy job:
   only:
     - main
   tags:
-    - windows
+    - linux
   stage: deploy 
 
 pages:
   tags:
-    - windows
+    - linux
   stage: deploy
   script:
     - nuget install docfx.console -version 2.51.0
