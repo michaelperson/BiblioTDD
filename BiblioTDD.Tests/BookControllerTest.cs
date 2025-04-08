@@ -53,18 +53,57 @@ namespace BiblioTDD.Tests
                 Genre = "Programming",
                 Year = 2008,
                 Copies = 3
-            }; 
-            _bookService.Setup(b => b.AddBook(It.IsAny<Book>()))
-                .Callback<Book>((b) => 
-                {
-                     
-                    throw new  Exception();
-                }
-             );
+            };
+
+            _bookService.Setup(b => b.GetById(It.IsAny<int>())).Returns(new Book());
+           
             //Act 
             //Assert
             Assert.Throws<ISBNDuplicateException>(() => _bookController.RegisterBook(monLivre));
-            _bookService.Verify(r => r.AddBook(It.IsAny<Book>()), Times.Once);
+            _bookService.Verify(r => r.AddBook(It.IsAny<Book>()), Times.Never);
+
+
+        }
+        [Fact]
+        [Description("BK-03 : Ajout d'un livre avec des champs obligatoires manquants - EXCEPTION")]
+        public void AddBookWithEmptyTitleThrowException()
+        {
+            //Arrange
+            Book monLivre = new Book()
+            {
+                Title = "",
+                Auteur = "Robert C. Martin",
+                ISBN = "9780132350887",
+                Genre = "Programming",
+                Year = 2008,
+                Copies = 3
+            };
+            
+            //Act 
+            //Assert
+            Assert.Throws<MandatoryFieldMissingException>(() => _bookController.RegisterBook(monLivre));
+            _bookService.Verify(r => r.AddBook(It.IsAny<Book>()), Times.Never);
+
+
+        }
+        [Fact]
+        [Description("BK-03 : Ajout d'un livre avec des champs obligatoires manquants - EXCEPTION")]
+        public void AddBookWithEmptyISBNThrowException()
+        {
+            //Arrange
+            Book monLivre = new Book()
+            {
+                Title = "Clean Code",
+                Auteur = "Robert C. Martin",
+                ISBN = "",
+                Genre = "Programming",
+                Year = 2008,
+                Copies = 3
+            }; 
+            //Act 
+            //Assert
+            Assert.Throws<MandatoryFieldMissingException>(() => _bookController.RegisterBook(monLivre));
+            _bookService.Verify(r => r.AddBook(It.IsAny<Book>()), Times.Never);
 
 
         }
