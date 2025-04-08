@@ -9,32 +9,49 @@ stages:
   - deploy
 build job:
   script:
-    - echo "building..."
+    - dotnet build -c Release
   tags:
     - windows
   stage: build
   only: 
     - merge_requests 
+  artifacts:
+    paths:
+      - BiblioTdd/artifacts
+       
 
 test and cover job:
   script:
-    - echo "running tests and coverage analysis..."
+    - dotnet test -c Release /p:CollectCoverage=true
+  coverage: /|s*Totals*|s*(d+[,.]d+%)/
   tags:
     - windows
   stage: test
+  only:
+    - merge_requests
 
 pack and deploy job:
   script:
-    - echo "packing and pushing to nuget..."
+    - dotnet pack -c Release -o .
+    - dotnet new nugetconfig
+    - nuget sources add -name feedName -source https://pkgs.dev.azure.com/cicdsamples/TddSample1/_packaging/TddSource/nuget/v3/index.json -username cicdsamples -password $nugetFeedToken -configfile nuget.config -StorePasswordInClearText
+    - nuget push -source feedName -skipduplicate -apikey az *.nupkg
+  only:
+    - master
   tags:
     - windows
-  stage: deploy
-  only: 
-    - merge_requests 
+  stage: deploy 
 
 pages:
-  script:
-    - echo "creating docs..."
   tags:
     - windows
   stage: deploy
+  script:
+    - nuget install docfx.console -version 2.51.0
+    - $env:path = "$env:path;$($(get-location).Path)"
+    - .docfx.console.2.51.0toolsdocfx.exe .docfxdocfx.json
+  artifacts:
+    paths:
+      - public
+  only:
+    - master
