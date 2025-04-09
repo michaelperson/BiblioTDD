@@ -41,5 +41,24 @@ namespace BiblioTDD.app
             }
             
         }
+
+
+        public bool UpdateBook(Book book)
+        {
+            var existing = _service.GetById(book.BookId);
+            if (existing == null)
+                throw new Exception("Book not found");
+
+            try
+            {
+                _service.UpdateBook(book);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
     }
 }
