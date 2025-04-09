@@ -107,5 +107,24 @@ namespace BiblioTDD.Tests
 
 
         }
+        [Fact]
+        [Description("BK-04 : Ajout d'un livre avec un nombre de copies négatif - EXCEPTION")]
+        public void AddBookWithNegativeCopiesThrowsException()
+        {
+            // Arrange
+            Book monLivre = new Book()
+            {
+                Title = "Clean Code",
+                Auteur = "Robert C. Martin",
+                ISBN = "9780132350884",
+                Genre = "Programming",
+                Year = 2008,
+                Copies = -1
+            };
+
+            // Act & Assert
+            Assert.Throws<NegativeCopiesException>(() => _bookController.RegisterBook(monLivre));
+            _bookService.Verify(r => r.AddBook(It.IsAny<Book>()), Times.Never);
+        }
     }
 }

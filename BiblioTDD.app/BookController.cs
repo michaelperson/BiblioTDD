@@ -22,8 +22,14 @@ namespace BiblioTDD.app
         {
             if (_service.GetById(book.BookId) != null) { 
                 throw new ISBNDuplicateException(); }
+
             if(string.IsNullOrEmpty(book.ISBN) || string.IsNullOrEmpty(book.Title) ) {
                 throw new MandatoryFieldMissingException(); }
+
+            if (book.Copies < 0)
+            {
+                throw new NegativeCopiesException(); }
+
             try
             {
                 _service.AddBook(book);
