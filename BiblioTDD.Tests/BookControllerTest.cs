@@ -237,6 +237,21 @@ namespace BiblioTDD.Tests
             Assert.True(result);
             _bookService.Verify(s => s.DeleteBook(bookId), Times.Once);
         }
+        [Fact]
+        [Description("BK-09 : Tentative de suppression d'un livre avec emprunts actifs - EXCEPTION")]
+        public void DeleteBookWithActiveLoansThrowsException()
+        {
+            // Arrange
+            int bookId = 1;
+
+            _bookService.Setup(s => s.GetById(bookId)).Returns(new Book { BookId = bookId });
+            _bookService.Setup(s => s.HasActiveLoans(bookId)).Returns(true);
+
+            // Act & Assert
+            Assert.Throws<BookDeletionException>(() => _bookController.DeleteBook(bookId));
+            _bookService.Verify(s => s.DeleteBook(It.IsAny<int>()), Times.Never);
+        }
+
 
     }
 }

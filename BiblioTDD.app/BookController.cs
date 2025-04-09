@@ -67,8 +67,10 @@ namespace BiblioTDD.app
                 throw new BookNotFoundException();
 
             if (_service.HasActiveLoans(bookId))
-                throw new Exception("Impossible de supprimer un livre avec des emprunts actifs.");
+            {
 
+            }
+                throw new BookDeletionException();
             try
             {
                 _service.DeleteBook(bookId);
