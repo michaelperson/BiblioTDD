@@ -220,6 +220,23 @@ namespace BiblioTDD.Tests
             Assert.Throws<BookNotFoundException>(() => _bookController.UpdateBook(updatedBook));
             _bookService.Verify(s => s.UpdateBook(It.IsAny<Book>()), Times.Never);
         }
+        [Fact]
+        [Description("BK-08 : Suppression d'un livre existant sans emprunts actifs")]
+        public void DeleteBookWithoutActiveLoansSuccessfully()
+        {
+            // Arrange
+            int bookId = 1;
+
+            _bookService.Setup(s => s.HasActiveLoans(bookId)).Returns(false);
+            _bookService.Setup(s => s.GetById(bookId)).Returns(new Book { BookId = bookId });
+
+            // Act
+            bool result = _bookController.DeleteBook(bookId);
+
+            // Assert
+            Assert.True(result);
+            _bookService.Verify(s => s.DeleteBook(bookId), Times.Once);
+        }
 
     }
 }

@@ -60,5 +60,25 @@ namespace BiblioTDD.app
             }
         }
 
+        public bool DeleteBook(int bookId)
+        {
+            var book = _service.GetById(bookId);
+            if (book == null)
+                throw new BookNotFoundException();
+
+            if (_service.HasActiveLoans(bookId))
+                throw new Exception("Impossible de supprimer un livre avec des emprunts actifs.");
+
+            try
+            {
+                _service.DeleteBook(bookId);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
     }
 }

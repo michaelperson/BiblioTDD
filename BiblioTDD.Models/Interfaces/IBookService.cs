@@ -12,5 +12,7 @@ namespace BiblioTDD.Models.Interfaces
         Book GetById(int id);
         void AddBook(Book book);
         void UpdateBook(Book book);
+        bool HasActiveLoans(int bookId);
+        void DeleteBook(int bookId);
     }
 }
