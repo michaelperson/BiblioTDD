@@ -162,6 +162,43 @@ namespace BiblioTDD.Tests
             Assert.True(result);
             _bookService.Verify(s => s.UpdateBook(updatedBook), Times.Once);
         }
+        [Fact]
+        [Description("BK-06 : Mise à jour du nombre de copies d'un livre existant")]
+        public void UpdateBookCopiesSuccessfully()
+        {
+            // Arrange
+            Book originalBook = new Book
+            {
+                BookId = 1,
+                Title = "Clean Code",
+                Auteur = "Robert C. Martin",
+                ISBN = "9780132350884",
+                Year = 2008,
+                Genre = "Programming",
+                Copies = 3
+            };
+
+            Book updatedBook = new Book
+            {
+                BookId = 1,
+                Title = "Clean Code",
+                Auteur = "Robert C. Martin",
+                ISBN = "9780132350884",
+                Year = 2008,
+                Genre = "Programming",
+                Copies = 5 // ajout de 2 copies
+            };
+
+            _bookService.Setup(s => s.GetById(originalBook.BookId)).Returns(originalBook);
+
+            // Act
+            bool result = _bookController.UpdateBook(updatedBook);
+
+            // Assert
+            Assert.True(result);
+            _bookService.Verify(s => s.UpdateBook(updatedBook), Times.Once);
+        }
+
 
     }
 }
