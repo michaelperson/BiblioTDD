@@ -198,7 +198,28 @@ namespace BiblioTDD.Tests
             Assert.True(result);
             _bookService.Verify(s => s.UpdateBook(updatedBook), Times.Once);
         }
+        [Fact]
+        [Description("BK-07 : Mise à jour d'un livre inexistant - EXCEPTION")]
+        public void UpdateNonExistingBookThrowsException()
+        {
+            // Arrange
+            Book updatedBook = new Book
+            {
+                BookId = 999, // ID inexistant
+                Title = "Unknown Book",
+                Auteur = "Nobody",
+                ISBN = "0000000000000",
+                Year = 2000,
+                Genre = "None",
+                Copies = 1
+            };
 
+            _bookService.Setup(s => s.GetById(updatedBook.BookId)).Returns((Book?)null); // Simule un livre inexistant
+
+            // Act & Assert
+            Assert.Throws<BookNotFoundException>(() => _bookController.UpdateBook(updatedBook));
+            _bookService.Verify(s => s.UpdateBook(It.IsAny<Book>()), Times.Never);
+        }
 
     }
 }
